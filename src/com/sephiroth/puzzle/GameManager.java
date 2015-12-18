@@ -35,9 +35,13 @@ public class GameManager {
         this.gameView = gameView;
         this.map = new Map(this, width, height);
         map.createMap();
-        /*Toast toast = Toast.makeText(gameView.getContext(), width, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();*/
+        //setStatuses(player.getStats());
+    }
+
+    public void setStatuses(ArrayList<String> stats) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(gameView.getContext(), android.R.layout.simple_list_item_1, stats);
+        //System.out.println(this.gameView.getStatusBar());
+        this.gameView.getStatusBar().setAdapter(adapter);
     }
 
     public void setGrid(ArrayList<String> units, String color) {
@@ -50,21 +54,19 @@ public class GameManager {
             }
         };
         this.gameView.getGridView().setAdapter(adapter);
-        //this.gameView.redraw();
     }
 
     public void createMainEvent() {
         GameManager gameManager = this;
         this.gameView.getGridView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                player.makeMove();
                 ArrayList<String> units = map.getUnits();
                 ((TextView) v).setText(units.get(position));
                 v.setBackgroundColor(Color.parseColor("#6a3c22"));
                 map.openUnits.add(position);
                 Unit unit = Unit.getUnitByLetter(gameManager, units.get(position), map.getLevel());
-                unit.action();
-                player.makeAndcheckMoves();
-                //Toast.makeText(getContext(), units.get(position), Toast.LENGTH_SHORT).show();
+                if (unit.action()) player.checkMoves();
             }
         });
     }
@@ -78,7 +80,6 @@ public class GameManager {
                 ((TextView) v).setText(Integer.toString(nums.get(position)));
                 v.setBackgroundColor(Color.parseColor("#6a3c22"));
                 enemy.getDamage(nums.get(position));
-                //Toast.makeText(gameView.getContext(), nums.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -86,6 +87,7 @@ public class GameManager {
     public void retrieveMainMap() {
         setGrid(map.retrieveMainMap(), "#43b71f");
         createMainEvent();
+        player.checkMoves();
     }
 
     public void lvlMessage() {

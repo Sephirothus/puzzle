@@ -33,7 +33,8 @@ public class Unit {
         return unit;
     }
 
-    public void action() {
+    public boolean action() {
         // Empty action
+        return true;
     }
 }

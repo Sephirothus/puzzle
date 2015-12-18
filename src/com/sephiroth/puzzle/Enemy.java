@@ -2,6 +2,7 @@ package com.sephiroth.puzzle;
 
 import android.os.Handler;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -24,9 +25,20 @@ public class Enemy extends Unit {
     }
 
     @Override
-    public void action() {
+    public boolean action() {
         gameManager.map.makeBattleGrid();
+        ArrayList<String> stats = gameManager.player.getStats();
+        stats.addAll(getStats());
+        //gameManager.setStatuses(stats);
         gameManager.createBattleEvent(this);
+        return false;
+    }
+
+    private ArrayList<String> getStats() {
+        ArrayList<String> stats = new ArrayList<String>();
+        stats.add("Enemy Health: " + health);
+        stats.add("Enemy Strengh: " + strength);
+        return stats;
     }
 
     public void getDamage(int dmg) {

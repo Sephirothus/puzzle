@@ -1,6 +1,9 @@
 package com.sephiroth.puzzle;
 
 import android.os.Handler;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
  * Created by sephirothus on 13.12.15.
@@ -43,8 +46,18 @@ public class Player {
         return exp;
     }
 
-    public void makeAndcheckMoves() {
+    public void makeMove() {
         leftMoves--;
+    }
+
+    public ArrayList<String> getStats() {
+        ArrayList<String> stats = new ArrayList<String>();
+        stats.add("Health: " + getHealth());
+        stats.add("Strengh: " + getStrength());
+        return stats;
+    }
+
+    public boolean checkMoves() {
         if (leftMoves <= 0) {
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -55,6 +68,8 @@ public class Player {
                     leftMoves = moves;
                 }
             }, 1000);
+            return false;
         }
+        return true;
     }
 }
